@@ -1,5 +1,7 @@
+import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom"
-import { useProductDetails } from "../context/ProducContext";
+import { useSelector,useDispatch } from "react-redux";
+import { fetchProducts } from "../features/product/productSlice";
 import Loader from "../components/Loader";
 import { IoMdPricetag } from "react-icons/io";
 import { SiOpenproject } from "react-icons/si";
@@ -7,8 +9,14 @@ import styles from './DetailsPage.module.css'
 import { FaArrowLeft } from "react-icons/fa";
 function DetailsPage() {
   const{id}=useParams();
+  const dispatch=useDispatch()
+  useEffect(()=>{
+    dispatch(fetchProducts())
+  },[])
 
-  const produvtDetails=useProductDetails(+id);
+  const produvtDetails=useSelector(store=>
+    store.product.products.find(i=>i.id==+id));
+
   if(!produvtDetails)return <Loader/>
   const{title,image,description,category,price}=produvtDetails
   return (
